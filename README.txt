@@ -1,27 +1,6 @@
-# Moje Kalorie — wersja startowa
+MOJE KALORIE 0.2
+Ulepszenia: top 5 lokalnych propozycji Food-101, edytor wielu składników, gramatura dla każdego składnika, lokalna tabela wartości odżywczych, dziennik i eksport.
 
-Prywatna aplikacja PWA na iPhone'a. Dane posiłków i cel kalorii zapisują się lokalnie w przeglądarce (localStorage). Klasyfikacja zdjęć używa modelu Food-101 przez Transformers.js i WebAssembly; po pobraniu model może być buforowany przez przeglądarkę.
+OGRANICZENIA: Food-101 klasyfikuje całe zdjęcie do jednej z 101 klas. Nie segmentuje zdjęcia ani nie wykrywa niezawodnie każdego składnika. Gramatura jest wpisywana/korygowana przez użytkownika; nie jest mierzona ze zdjęcia. Wartości bazy są orientacyjne. Model pobiera się z internetu przy pierwszym użyciu; analiza obrazu odbywa się w przeglądarce na urządzeniu, bez płatnego API.
 
-## Ważne ograniczenia tej wersji
-- Model rozpoznaje jedną główną kategorię potrawy z listy 101 klas; nie rozdziela niezawodnie składników mieszanych dań.
-- Gramatura nie jest mierzona ze zdjęcia. Użytkownik wpisuje/zmienia porcję.
-- Wartości kcal i makro są orientacyjnymi wartościami startowymi dla wybranych dań, a nie bazą wszystkich produktów. Należy je zweryfikować.
-- Pierwsze uruchomienie klasyfikatora wymaga internetu i pobrania modelu (duży plik, ok. 90 MB). Rozpoznawanie wykonuje się lokalnie w przeglądarce.
-- To prototyp do testów, nie narzędzie medyczne ani precyzyjny pomiar dietetyczny.
-
-## Publikacja bez opłat
-PWA musi być dostępna pod adresem HTTPS. Można użyć darmowego GitHub Pages:
-1. Utwórz prywatne repozytorium na GitHub (lub publiczne, jeśli nie przeszkadza Ci publiczny kod).
-2. Wgraj wszystkie pliki z tego folderu do repozytorium.
-3. W ustawieniach repozytorium włącz Pages, źródło `Deploy from a branch`, branch `main`, folder `/root`.
-4. Otwórz otrzymany adres w Safari na iPhonie.
-5. W Safari: Udostępnij → Dodaj do ekranu początkowego → Dodaj.
-
-## Test lokalny
-Serwis service worker i instalacja PWA wymagają HTTPS albo localhost. Samo otwarcie pliku index.html nie wystarczy do testu instalacji.
-
-## Pliki
-- index.html — aplikacja
-- manifest.webmanifest — nazwa i ikony PWA
-- sw.js — cache aplikacji
-- icon-192.png / icon-512.png — ikony
+AKTUALIZACJA: rozpakuj ZIP, w repozytorium GitHub wybierz Add file > Upload files, wgraj i zastąp index.html, manifest.webmanifest, sw.js oraz ikony, następnie Commit changes. Po 1-3 minutach odśwież stronę. Jeśli stara wersja jest w cache, zamknij i uruchom aplikację ponownie.

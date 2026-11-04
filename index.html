@@ -1,124 +1,32 @@
-<!doctype html>
-<html lang="pl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#101a17">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Moje Kalorie">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icon-192.png">
-<title>Moje Kalorie</title>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101a17"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Moje Kalorie"><link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icon-192.png"><title>Moje Kalorie</title>
 <style>
-:root{--bg:#101a17;--panel:#1b2924;--panel2:#22332d;--text:#f3f6f1;--muted:#aab8af;--accent:#b7f36b;--line:#34463e;--danger:#ffb5a9}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 16px calc(24px + env(safe-area-inset-bottom))}
-main{max-width:560px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;padding:18px 0 12px}.brand{font-size:22px;font-weight:800;letter-spacing:-.5px}.brand span{color:var(--accent)}.date{color:var(--muted);font-size:13px}
-h1{font-size:27px;letter-spacing:-.8px;margin:18px 0 5px}.sub{color:var(--muted);margin:0 0 18px;font-size:14px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:17px;margin:13px 0}
-.kcalrow{display:flex;justify-content:space-between;align-items:end}.big{font-size:39px;font-weight:800;letter-spacing:-1.5px}.smallmuted{font-size:13px;color:var(--muted)}.progress{height:9px;background:#34443d;border-radius:20px;overflow:hidden;margin:13px 0 8px}.bar{height:100%;width:0;background:var(--accent);border-radius:20px;transition:width .25s}
-.macros{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.macro{background:var(--panel2);border-radius:13px;padding:11px}.macro b{display:block;font-size:19px}.macro small{color:var(--muted)}
-button,.btn{border:0;border-radius:14px;padding:14px 16px;font-size:15px;font-weight:700;cursor:pointer;background:var(--accent);color:#142016}
-.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}button:disabled{opacity:.45;cursor:default}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions button{width:100%}
-input,select{width:100%;background:#12201b;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:16px;margin:6px 0 12px}
-label{font-size:13px;color:var(--muted)}.meal{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.meal:last-child{border:0}.meal strong{display:block}.meal small{color:var(--muted)}
-.sectiontitle{font-size:18px;font-weight:750;margin:22px 0 8px}.hint{font-size:12px;color:var(--muted);line-height:1.45}
-#photo{display:none}.preview{width:100%;max-height:250px;object-fit:cover;border-radius:14px;display:none;margin:10px 0}
-.status{padding:11px;border-radius:12px;background:var(--panel2);color:var(--muted);font-size:13px;line-height:1.4;margin:10px 0}
-.result{display:none}.pill{display:inline-block;background:#31452e;color:var(--accent);padding:5px 9px;border-radius:20px;font-size:12px;margin:4px 3px 4px 0}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-footer{text-align:center;color:var(--muted);font-size:11px;padding:20px 0}
-</style>
-</head>
-<body><main>
-<header class="top"><div class="brand">🥑 Moje <span>Kalorie</span></div><div class="date" id="today"></div></header>
-<h1>Twój dzień w skrócie</h1><p class="sub">Dodaj zdjęcie posiłku i kontroluj swoje odżywianie.</p>
-<section class="card">
- <div class="kcalrow"><div><div class="smallmuted">Zjedzone dzisiaj</div><div class="big"><span id="total">0</span> <span style="font-size:16px;color:var(--muted)">kcal</span></div></div><div style="text-align:right"><div class="smallmuted">Cel dzienny</div><input id="goal" type="number" min="500" max="7000" value="2200" style="width:105px;text-align:right;font-weight:700;margin:5px 0 0"></div></div>
- <div class="progress"><div class="bar" id="bar"></div></div><div class="kcalrow smallmuted"><span id="remaining">Pozostało 2200 kcal</span><span id="percent">0%</span></div>
-</section>
-<section class="card">
- <div class="sectiontitle" style="margin:0 0 12px">Makroskładniki</div>
- <div class="macros"><div class="macro"><b id="protein">0 g</b><small>Białko</small></div><div class="macro"><b id="carbs">0 g</b><small>Węglowodany</small></div><div class="macro"><b id="fat">0 g</b><small>Tłuszcze</small></div></div>
-</section>
-<div class="sectiontitle">Dodaj posiłek</div>
-<section class="card">
- <div class="actions"><button id="cameraBtn">📷 Zrób zdjęcie</button><button class="secondary" id="galleryBtn">🖼️ Wybierz zdjęcie</button></div>
- <input id="photo" type="file" accept="image/*" capture="environment">
- <img id="preview" class="preview" alt="Podgląd posiłku">
- <div id="aiStatus" class="status">Model AI pobierze się przy pierwszej analizie (około 90 MB). Zdjęcie będzie analizowane na urządzeniu.</div>
- <button id="analyse" style="width:100%;display:none">Rozpoznaj jedzenie</button>
- <div id="result" class="result">
-  <div class="sectiontitle">Wynik rozpoznawania</div><div id="predictions"></div>
-  <label for="foodName">Nazwa posiłku</label><input id="foodName" placeholder="np. Kurczak z ryżem">
-  <div class="row"><div><label for="portion">Porcja (g)</label><input id="portion" type="number" value="300" min="1"></div><div><label for="kcal100">Kalorie na 100 g</label><input id="kcal100" type="number" value="160" min="0"></div></div>
-  <div class="row"><div><label for="p100">Białko / 100 g</label><input id="p100" type="number" value="8"></div><div><label for="c100">Węglowodany / 100 g</label><input id="c100" type="number" value="18"></div></div>
-  <label for="f100">Tłuszcze / 100 g</label><input id="f100" type="number" value="6">
-  <div class="status" id="estimate">Szacowana energia: 480 kcal. Sprawdź porcję i wartości przed zapisaniem.</div>
-  <button id="saveMeal" style="width:100%">＋ Zapisz posiłek</button>
- </div>
-</section>
-<div class="sectiontitle">Dzisiejsze posiłki</div>
-<section class="card" id="mealList"><div class="hint">Nie dodano jeszcze żadnych posiłków.</div></section>
-<div class="actions"><button class="secondary" id="exportBtn">Eksportuj dane</button><button class="secondary" id="resetBtn">Wyczyść dzień</button></div>
-<p class="hint" style="margin-top:15px">Ważne: AI rozpoznaje kategorię potrawy, ale nie potrafi wiarygodnie zmierzyć gramatury z pojedynczego zdjęcia. Wartości odżywcze są orientacyjne. Zawsze popraw porcję i skład, jeśli trzeba.</p>
-<footer>Moje Kalorie • prywatny dziennik żywieniowy • dane zapisują się w tej przeglądarce</footer>
-</main>
+:root{--bg:#101a17;--p:#1b2924;--p2:#22332d;--t:#f3f6f1;--m:#aab8af;--a:#b7f36b;--l:#34463e}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px -apple-system,sans-serif;padding:env(safe-area-inset-top) 15px 25px}main{max-width:580px;margin:auto}.top,.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.top{padding:18px 0}.brand{font-size:22px;font-weight:800}.brand span{color:var(--a)}h1{font-size:27px;margin:10px 0 5px}.muted,.hint,label{color:var(--m)}.sub{font-size:14px}.card{background:var(--p);border:1px solid var(--l);border-radius:19px;padding:16px;margin:12px 0}.big{font-size:37px;font-weight:800}.progress{height:8px;background:#34443d;border-radius:20px;overflow:hidden;margin:12px 0}.bar{height:100%;background:var(--a);width:0}.macros{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.macro{background:var(--p2);padding:10px;border-radius:12px}.macro b{display:block;font-size:18px}.macro small,label,.hint{font-size:12px}.section{font-size:18px;font-weight:750;margin:20px 0 8px}button,input,select{font:inherit}button{border:0;border-radius:13px;padding:13px;background:var(--a);color:#142016;font-weight:750}button.secondary{background:var(--p2);color:var(--t);border:1px solid var(--l)}button:disabled{opacity:.5}.actions,.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}input,select{width:100%;background:#12201b;color:var(--t);border:1px solid var(--l);border-radius:11px;padding:11px;margin:5px 0 10px}label{display:block}.preview{width:100%;max-height:240px;object-fit:cover;border-radius:13px;margin-top:12px;display:none}.status,.total{background:var(--p2);border-radius:12px;padding:11px;color:var(--m);font-size:13px;line-height:1.45;margin:10px 0}.pill{display:inline-block;background:#31452e;color:var(--a);padding:6px 8px;border-radius:20px;font-size:12px;margin:3px}.ingredient{background:var(--p2);border:1px solid var(--l);border-radius:13px;padding:12px;margin:9px 0}.hint{line-height:1.5}.small{padding:8px 10px;font-size:12px}.meal{padding:11px 0;border-bottom:1px solid var(--l)}#photo{display:none}footer{text-align:center;color:var(--m);font-size:11px;padding:20px 0}
+</style></head><body><main>
+<div class="top"><div class="brand">🥑 Moje <span>Kalorie</span></div><div class="muted" id="today"></div></div><h1>Twój dzień w skrócie</h1><p class="sub muted">Analiza zdjęcia na urządzeniu • bez wysyłania zdjęć do chmury</p>
+<section class="card"><div class="row"><div><div class="muted">Zjedzone dzisiaj</div><div class="big"><span id="total">0</span> <small>kcal</small></div></div><div><label>Cel dzienny</label><input id="goal" type="number" value="2200" style="width:100px;text-align:right"></div></div><div class="progress"><div id="bar" class="bar"></div></div><div class="row muted"><span id="left">Pozostało 2200 kcal</span><span id="pct">0%</span></div></section>
+<section class="card"><div class="section" style="margin:0 0 10px">Makroskładniki</div><div class="macros"><div class="macro"><b id="protein">0 g</b><small>Białko</small></div><div class="macro"><b id="carbs">0 g</b><small>Węglowodany</small></div><div class="macro"><b id="fat">0 g</b><small>Tłuszcze</small></div></div></section>
+<div class="section">Dodaj posiłek ze zdjęcia</div><section class="card"><div class="actions"><button id="camera">📷 Zrób zdjęcie</button><button class="secondary" id="gallery">🖼️ Galeria</button></div><input id="photo" type="file" accept="image/*" capture="environment"><img id="preview" class="preview"><div id="status" class="status">Model Food-101 proponuje rozpoznania całego zdjęcia. Nie mierzy samodzielnie gramatury ani nie rozdziela pewnie składników dania mieszanego.</div><button id="analyse" style="width:100%;display:none">Analizuj lokalnie</button>
+<div id="editor" style="display:none"><div class="section">Propozycje AI</div><div id="suggestions"></div><div class="status">Wybierz propozycje, dodaj brakujące składniki z bazy i popraw gramaturę. AI klasyfikuje całe zdjęcie — potwierdź składniki samodzielnie.</div><div class="row"><div style="flex:1"><label>Dodaj składnik</label><select id="foodSelect"></select></div><button id="addFood" class="small" style="align-self:end;margin-bottom:10px">＋ Dodaj</button></div><div class="section">Składniki posiłku</div><div id="ingredients"></div><div class="total"><div class="row"><b>Razem</b><b id="mealKcal">0 kcal</b></div><div id="mealMacros" class="hint"></div></div><label>Nazwa posiłku</label><input id="mealName" value="Posiłek ze zdjęcia"><button id="save" style="width:100%">Zapisz posiłek</button></div></section>
+<div class="section">Dzisiejsze posiłki</div><section class="card" id="meals"><div class="hint">Brak zapisanych posiłków.</div></section><div class="actions"><button class="secondary" id="export">Eksportuj dane</button><button class="secondary" id="clear">Wyczyść dzień</button></div>
+<p class="hint">Prywatność: zdjęcie analizuje model działający w przeglądarce. Model pobiera się z internetu przy pierwszym użyciu. Dziennik jest zapisany lokalnie. Gramatura i wartości odżywcze są szacunkowe — sprawdzaj je przed zapisem.</p><footer>Moje Kalorie • wersja 0.2</footer></main>
 <script type="module">
-import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2';
-env.allowLocalModels = false;
-env.useBrowserCache = true;
-const $ = id => document.getElementById(id);
-let photoFile=null, classifier=null, meals=JSON.parse(localStorage.getItem('mk_meals')||'[]');
-const todayKey=new Date().toLocaleDateString('sv-SE');
-meals=meals.filter(m=>m.day===todayKey);
-$('today').textContent=new Date().toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'});
-$('goal').value=localStorage.getItem('mk_goal')||2200;
-function render(){
- const sum=meals.reduce((a,m)=>a+m.kcal,0), goal=+$('goal').value||2200;
- $('total').textContent=Math.round(sum);$('remaining').textContent=sum<=goal?`Pozostało ${Math.round(goal-sum)} kcal`:`Przekroczono o ${Math.round(sum-goal)} kcal`;
- $('percent').textContent=Math.round(sum/goal*100)+'%';$('bar').style.width=Math.min(100,sum/goal*100)+'%';
- for(const k of ['protein','carbs','fat']){$(k).textContent=Math.round(meals.reduce((a,m)=>a+m[k],0))+' g'}
- $('mealList').innerHTML=meals.length?meals.map((m,i)=>`<div class="meal"><div><strong>${escapeHtml(m.name)}</strong><small>${m.grams} g • ${m.time}</small></div><div style="text-align:right"><strong>${Math.round(m.kcal)} kcal</strong><small><a href="#" data-del="${i}" style="color:#ffb5a9">Usuń</a></small></div></div>`).join(''):'<div class="hint">Nie dodano jeszcze żadnych posiłków.</div>';
- localStorage.setItem('mk_meals',JSON.stringify(meals));localStorage.setItem('mk_goal',goal);
-}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function updateEstimate(){let g=+$('portion').value||0,k=+$('kcal100').value||0;$('estimate').textContent=`Szacowana energia: ${Math.round(g*k/100)} kcal. Sprawdź porcję i wartości przed zapisaniem.`}
-['portion','kcal100','p100','c100','f100'].forEach(id=>$(id).addEventListener('input',updateEstimate));
-$('goal').addEventListener('input',render);
-$('cameraBtn').onclick=()=>{$('photo').setAttribute('capture','environment');$('photo').click()};
-$('galleryBtn').onclick=()=>{$('photo').removeAttribute('capture');$('photo').click()};
-$('photo').onchange=e=>{photoFile=e.target.files[0];if(!photoFile)return;$('preview').src=URL.createObjectURL(photoFile);$('preview').style.display='block';$('analyse').style.display='block';$('result').style.display='none';$('aiStatus').textContent='Zdjęcie gotowe. Naciśnij „Rozpoznaj jedzenie”.'};
-$('analyse').onclick=async()=>{
- if(!photoFile)return;$('analyse').disabled=true;$('aiStatus').textContent='Ładowanie modelu AI. Przy pierwszym uruchomieniu może to potrwać kilka minut…';
- try{
-  if(!classifier){classifier=await pipeline('image-classification','onnx-community/swin-finetuned-food101-ONNX',{device:'wasm'});}
-  $('aiStatus').textContent='Analizuję zdjęcie na tym urządzeniu…';
-  const out=await classifier($('preview').src,{top_k:5});
-  $('predictions').innerHTML=out.map(x=>`<span class="pill">${escapeHtml(x.label.replaceAll('_',' '))} · ${Math.round(x.score*100)}%</span>`).join('');
-  const best=out[0].label.replaceAll('_',' ');$('foodName').value=best.charAt(0).toUpperCase()+best.slice(1);
-  const presets={
-   pizza:[266,11,33,10],hamburger:[295,17,30,14],sushi:[150,6,25,3],ramen:[120,5,18,3],
-   spaghetti:[160,6,25,5],lasagna:[165,10,15,7],salad:[80,3,8,4],omelette:[154,11,1,11],
-   fried_rice:[174,5,28,5],ice_cream:[207,4,24,11],chocolate_cake:[371,5,53,16],
-   french_fries:[312,3,41,15],steak:[250,26,0,15],grilled_salmon:[206,22,0,12]
-  };
-  const key=out[0].label.toLowerCase();const v=presets[key]||[160,8,18,6];
-  $('kcal100').value=v[0];$('p100').value=v[1];$('c100').value=v[2];$('f100').value=v[3];
-  $('result').style.display='block';$('aiStatus').textContent='Rozpoznawanie zakończone. Model działał lokalnie — zdjęcie nie zostało wysłane do serwera AI. Potwierdź nazwę i porcję.';
-  updateEstimate();$('result').scrollIntoView({behavior:'smooth',block:'start'});
- }catch(err){$('aiStatus').textContent='Nie udało się uruchomić modelu: '+err.message+'. Sprawdź połączenie z internetem i spróbuj ponownie.'}
- finally{$('analyse').disabled=false}
-};
-$('saveMeal').onclick=()=>{
- const g=+$('portion').value||0;if(g<=0)return alert('Podaj prawidłową porcję.');
- meals.push({day:todayKey,name:$('foodName').value||'Posiłek',grams:g,kcal:g*(+$('kcal100').value||0)/100,protein:g*(+$('p100').value||0)/100,carbs:g*(+$('c100').value||0)/100,fat:g*(+$('f100').value||0)/100,time:new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'})});
- $('result').style.display='none';$('preview').style.display='none';$('photo').value='';photoFile=null;render();
-};
-$('mealList').onclick=e=>{const i=e.target.dataset.del;if(i!==undefined){e.preventDefault();meals.splice(+i,1);render()}};
-$('resetBtn').onclick=()=>{if(confirm('Usunąć dzisiejsze posiłki?')){meals=[];render()}};
-$('exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(meals,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='moje-kalorie-'+todayKey+'.json';a.click();URL.revokeObjectURL(a.href)};
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-render();
+import {pipeline,env} from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2';env.allowLocalModels=false;env.useBrowserCache=true;
+const $=x=>document.getElementById(x),day=new Date().toLocaleDateString('sv-SE');
+const DB={
+'Pierś kurczaka grillowana':[165,31,0,3.6,130],'Kotlet schabowy':[280,19,14,17,130],'Ziemniaki gotowane':[87,2,20,.1,180],'Ryż gotowany':[130,2.7,28,.3,150],'Kasza gryczana':[92,3.4,20,.6,150],'Makaron gotowany':[158,5.8,31,.9,160],'Surówka z kapusty':[70,1.5,9,3,100],'Pomidor':[18,.9,3.9,.2,100],'Ogórek':[15,.7,3.6,.1,100],'Brokuły':[35,2.4,7.2,.4,100],'Łosoś pieczony':[206,22,0,12,130],'Jajko':[143,13,1.1,9.5,60],'Jajecznica':[180,10,2,14,160],'Chleb':[265,9,49,3.2,60],'Ser żółty':[350,25,1.5,27,25],'Twaróg':[133,18,3.5,5,100],'Banan':[89,1.1,23,.3,120],'Jabłko':[52,.3,14,.2,150],'Pizza':[266,11,33,10,180],'Hamburger':[295,17,30,14,200],'Frytki':[312,3.4,41,15,120],'Sushi':[150,6,25,3,180],'Zupa pomidorowa':[45,1.5,6,1.5,300],'Rosół':[25,2,1,1,300],'Pierogi ruskie':[220,7,30,8,200],'Naleśniki':[227,6,30,9,150],'Gulasz':[140,12,6,7,200],'Oliwa':[884,0,0,100,5],'Sos śmietanowy':[180,2,5,17,30],'Inny składnik':[150,5,15,7,100]};
+let model=null,photo=null,parts=[],pred=[],entries=JSON.parse(localStorage.getItem('mk2')||'[]').filter(x=>x.day===day);$('today').textContent=new Date().toLocaleDateString('pl-PL',{weekday:'short',day:'numeric',month:'short'});$('goal').value=localStorage.getItem('mk2goal')||2200;
+Object.keys(DB).forEach(n=>{let o=document.createElement('option');o.value=n;o.textContent=n;$('foodSelect').append(o)});
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function stats(){let s=entries.reduce((a,e)=>a+e.kcal,0),g=+$('goal').value||2200;$('total').textContent=Math.round(s);$('left').textContent=s<=g?`Pozostało ${Math.round(g-s)} kcal`:`Ponad cel o ${Math.round(s-g)} kcal`;$('pct').textContent=Math.round(s/g*100)+'%';$('bar').style.width=Math.min(100,s/g*100)+'%';[['protein','p'],['carbs','c'],['fat','f']].forEach(([id,k])=>$(id).textContent=Math.round(entries.reduce((a,e)=>a+e[k],0))+' g');$('meals').innerHTML=entries.length?entries.map((e,i)=>`<div class="meal row"><div><b>${esc(e.name)}</b><div class="hint">${esc(e.detail)}</div></div><div><b>${Math.round(e.kcal)} kcal</b><br><a href="#" data-del="${i}">Usuń</a></div></div>`).join(''):'<div class="hint">Brak zapisanych posiłków.</div>';localStorage.setItem('mk2',JSON.stringify(entries));localStorage.setItem('mk2goal',g)}
+function calc(){let t=[0,0,0,0];parts.forEach(x=>x.n.forEach((v,i)=>t[i]+=v*x.g/100));$('mealKcal').textContent=Math.round(t[0])+' kcal';$('mealMacros').textContent=`Białko ${t[1].toFixed(1)} g • Węglowodany ${t[2].toFixed(1)} g • Tłuszcze ${t[3].toFixed(1)} g`}
+function draw(){$('ingredients').innerHTML=parts.map((x,i)=>`<div class="ingredient"><div class="row"><b>${esc(x.name)}</b><button class="secondary small" data-rm="${i}">Usuń</button></div><div class="grid"><div><label>Porcja (g)</label><input type="number" min="1" value="${x.g}" data-g="${i}"></div><div><label>kcal / 100 g</label><input type="number" min="0" value="${x.n[0]}" data-k="${i}"></div></div><div class="hint">Białko ${x.n[1]} • węglowodany ${x.n[2]} • tłuszcze ${x.n[3]} g / 100 g</div></div>`).join('');calc()}
+function add(n){let a=DB[n]||DB['Inny składnik'];parts.push({name:n,g:a[4],n:a.slice(0,4)});draw()}
+$('camera').onclick=()=>{$('photo').setAttribute('capture','environment');$('photo').click()};$('gallery').onclick=()=>{$('photo').removeAttribute('capture');$('photo').click()};
+$('photo').onchange=e=>{photo=e.target.files[0];if(!photo)return;$('preview').src=URL.createObjectURL(photo);$('preview').style.display='block';$('analyse').style.display='block';$('editor').style.display='none';$('status').textContent='Zdjęcie gotowe. Naciśnij Analizuj lokalnie.'};
+$('analyse').onclick=async()=>{try{$('analyse').disabled=true;$('status').textContent='Ładowanie modelu. Pierwsze pobranie może potrwać kilka minut.';if(!model)model=await pipeline('image-classification','onnx-community/swin-finetuned-food101-ONNX',{device:'wasm'});$('status').textContent='Analizuję zdjęcie na urządzeniu…';pred=await model($('preview').src,{top_k:5});$('suggestions').innerHTML=pred.map((p,i)=>`<button class="${i?'secondary':''} small" data-p="${i}">${esc(p.label.replaceAll('_',' '))} ${Math.round(p.score*100)}%</button>`).join('');parts=[];let label=pred[0].label.toLowerCase(),map={pizza:'Pizza',hamburger:'Hamburger',french_fries:'Frytki',sushi:'Sushi',omelette:'Jajecznica',grilled_salmon:'Łosoś pieczony',fried_rice:'Ryż gotowany',spaghetti:'Makaron gotowany'};if(map[label])add(map[label]);$('mealName').value=pred[0].label.replaceAll('_',' ');$('editor').style.display='block';$('status').textContent='Model podał 5 propozycji dla całego zdjęcia. Nie wykrywa osobnych obiektów ani gramatury — dodaj i popraw składniki poniżej.';$('editor').scrollIntoView({behavior:'smooth'});}catch(e){$('status').textContent='Błąd modelu: '+e.message+'. Sprawdź internet przy pierwszym użyciu.'}finally{$('analyse').disabled=false}};
+$('suggestions').onclick=e=>{let i=e.target.dataset.p;if(i===undefined)return;let k=pred[+i].label.toLowerCase(),m={pizza:'Pizza',hamburger:'Hamburger',french_fries:'Frytki',sushi:'Sushi',omelette:'Jajecznica',grilled_salmon:'Łosoś pieczony',fried_rice:'Ryż gotowany',spaghetti:'Makaron gotowany'};if(m[k])add(m[k]);else $('status').textContent='Brak dokładnego odpowiednika tej etykiety w bazie. Wybierz składnik z listy.'};
+$('addFood').onclick=()=>add($('foodSelect').value);$('ingredients').oninput=e=>{let i=e.target.dataset.g??e.target.dataset.k;if(i===undefined)return;i=+i;if(e.target.dataset.g!==undefined)parts[i].g=+e.target.value||0;else parts[i].n[0]=+e.target.value||0;calc()};$('ingredients').onclick=e=>{if(e.target.dataset.rm!==undefined){parts.splice(+e.target.dataset.rm,1);draw()}};
+$('save').onclick=()=>{if(!parts.length)return alert('Dodaj składniki.');let t=[0,0,0,0];parts.forEach(x=>x.n.forEach((v,i)=>t[i]+=v*x.g/100));entries.push({day,name:$('mealName').value||'Posiłek',detail:parts.map(x=>x.name+' '+x.g+'g').join(', '),kcal:t[0],p:t[1],c:t[2],f:t[3],time:new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'})});$('editor').style.display='none';$('preview').style.display='none';$('photo').value='';stats()};
+$('meals').onclick=e=>{if(e.target.dataset.del!==undefined){e.preventDefault();entries.splice(+e.target.dataset.del,1);stats()}};$('goal').oninput=stats;$('clear').onclick=()=>{if(confirm('Wyczyścić dzisiejsze posiłki?')){entries=[];stats()}};$('export').onclick=()=>{let a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(entries,null,2)],{type:'application/json'}));a.href=u;a.download='moje-kalorie-'+day+'.json';a.click();URL.revokeObjectURL(u)};
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));stats();
 </script></body></html>
